@@ -1,9 +1,12 @@
 package com.Messenger.Messenger.response;
 
+import com.Messenger.Messenger.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @Builder
@@ -13,4 +16,5 @@ public class AuthenticationResponse {
 
     private String token;
     private String message;
+    private Set<String> roles;
 }

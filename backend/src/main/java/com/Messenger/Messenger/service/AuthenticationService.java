@@ -36,8 +36,11 @@ public class AuthenticationService {
         var currentUser = userService.findUserByEmail(user.getEmail());
         userService.addRoleToUser(currentUser, request.getRole());
         var jwtToken = jwtService.generateToken(user);
+        Set<String> strRoles = new HashSet<>();
+        user.getRoles().forEach(r -> strRoles.add(r.getName()));
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .roles(strRoles)
                 .message("OK")
                 .build();
     }
@@ -52,9 +55,15 @@ public class AuthenticationService {
             );
 
             var authenticatedUser = (UserDetails) user.getPrincipal();
+            var roles = userService.findUserByEmail(
+                    ((UserDetails) user.getPrincipal()).getUsername()
+            ).getRoles();
+            Set<String> strRoles = new HashSet<>();
+            roles.forEach(r -> strRoles.add(r.getName()));
             var jwtToken = jwtService.generateToken(authenticatedUser);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
+                    .roles(strRoles)
                     .message("OK")
                     .build();
         } catch (BadCredentialsException ex) {
